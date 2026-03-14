@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLYY — 큐레이션 음악 플랫폼</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f7f6f3;
+    --bg3: #f1f0ec;
+    --border: rgba(55,53,47,0.09);
+    --border2: rgba(55,53,47,0.16);
+    --text: #37352f;
+    --text2: #6b6860;
+    --text3: #9b9a97;
+    --blue-bg: #e8f0fd; --blue: #2e6fda; --blue-border: #b8d0f7;
+    --green-bg: #edf3ec; --green: #2d8a4e; --green-border: #b7d9c2;
+    --yellow-bg: #fef8e7; --yellow: #a0832a; --yellow-border: #f0d882;
+    --red-bg: #fdecea; --red: #c0392b; --red-border: #f5b8b4;
+    --teal-bg: #e8f5f2; --teal: #1a7a5e; --teal-border: #a8ddd0;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #191919; --bg2: #252525; --bg3: #2f2f2f;
+      --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+      --text: #e6e5e0; --text2: #9b9a96; --text3: #6b6a66;
+      --blue-bg: #1a2a4a; --blue: #7ab0f5; --blue-border: #2a4a7a;
+      --green-bg: #1a2e22; --green: #6dba8a; --green-border: #2a5040;
+      --yellow-bg: #2e2a14; --yellow: #e0b84a; --yellow-border: #5a4a10;
+      --red-bg: #2e1a1a; --red: #e07070; --red-border: #5a2a2a;
+      --teal-bg: #132420; --teal: #5acfb2; --teal-border: #1e4a40;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* Hero */
+  .hero {
+    border-left: 3px solid var(--blue);
+    padding: 1.4rem 1.6rem;
+    background: var(--blue-bg);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    margin-bottom: 3rem;
+  }
+  .hero-label {
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    color: var(--blue); text-transform: uppercase; margin-bottom: .4rem;
+  }
+  .hero-title { font-size: 28px; font-weight: 700; margin-bottom: .5rem; line-height: 1.25; }
+  .hero-sub { font-size: 14px; color: var(--text2); line-height: 1.7; }
+
+  /* Section */
+  .section { margin-bottom: 2.8rem; }
+  .section-title {
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text3);
+    margin-bottom: 1rem; padding-bottom: .45rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2.2rem 0; }
+
+  /* 3-col grid */
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  /* Card */
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.1rem;
+    background: var(--bg);
+  }
+  .card-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: .3rem; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: .3rem; }
+  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* Pill */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: .7rem; }
+  .pill {
+    font-size: 12px; padding: 4px 11px; border-radius: 99px;
+    border: 1px solid var(--border2); color: var(--text2);
+    background: var(--bg); line-height: 1.5;
+  }
+  .pill.done { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+  .pill.plan { background: var(--yellow-bg); border-color: var(--yellow-border); color: var(--yellow); }
+
+  /* Arch grid */
+  .arch {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .arch-cell { background: var(--bg); padding: .9rem 1rem; }
+  .arch-cell-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: .3rem; }
+  .arch-cell-val { font-size: 13px; font-weight: 600; margin-bottom: .2rem; }
+  .arch-cell-sub { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+  /* Flow wrap */
+  .flow-wrap { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
+  .flow-header {
+    background: var(--bg2); padding: .6rem 1rem;
+    font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--text2); border-bottom: 1px solid var(--border);
+  }
+  .flow-body { padding: 1rem; }
+
+  /* Cache flow */
+  .cache-flow { display: flex; align-items: stretch; gap: 6px; flex-wrap: wrap; margin: .75rem 0; }
+  .cache-node {
+    flex: 1; min-width: 90px;
+    border: 1px solid var(--border2); border-radius: var(--radius);
+    padding: .6rem .75rem; background: var(--bg); text-align: center;
+  }
+  .cache-node-title { font-size: 12px; font-weight: 600; }
+  .cache-node-sub { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
+  .cache-arrow { display: flex; align-items: center; color: var(--text3); font-size: 12px; flex-shrink: 0; }
+  .cache-node.l1 { background: var(--yellow-bg); border-color: var(--yellow-border); }
+  .cache-node.l1 .cache-node-title { color: var(--yellow); }
+  .cache-node.l2 { background: var(--blue-bg); border-color: var(--blue-border); }
+  .cache-node.l2 .cache-node-title { color: var(--blue); }
+  .cache-node.api { background: var(--green-bg); border-color: var(--green-border); }
+  .cache-node.api .cache-node-title { color: var(--green); }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; }
+  .step { display: flex; gap: .75rem; padding: .75rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 22px; height: 22px; border-radius: 50%;
+    background: var(--blue-bg); color: var(--blue);
+    font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .step-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* Tag flow */
+  .tag-flow {
+    display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+    padding: .75rem 1rem; background: var(--bg2);
+    border-radius: var(--radius); margin-top: 6px;
+  }
+  .tag-input {
+    font-size: 12px; font-weight: 600; padding: 4px 10px;
+    border-radius: 99px; border: 1px solid var(--border2);
+    background: var(--bg); color: var(--text);
+  }
+  .tag-arrow { font-size: 12px; color: var(--text3); }
+  .tag-check {
+    font-size: 12px; color: var(--text2); background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 3px 9px;
+  }
+  .tag-result { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
+  .t-genre { background: var(--blue-bg); color: var(--blue); }
+  .t-mood  { background: var(--yellow-bg); color: var(--yellow); }
+  .t-custom{ background: var(--bg2); color: var(--text2); border: 1px solid var(--border2); }
+
+  /* ERD */
+  .erd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: .75rem; }
+  .erd-table { border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; font-size: 11px; }
+  .erd-table-head { background: var(--bg2); padding: 5px 9px; font-weight: 600; border-bottom: 1px solid var(--border); }
+  .erd-table-row {
+    padding: 4px 9px; color: var(--text2); border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; gap: 4px;
+  }
+  .erd-table-row:last-child { border-bottom: none; }
+  .erd-badge { font-size: 9px; padding: 1px 5px; border-radius: 3px; font-weight: 700; flex-shrink: 0; }
+  .pk { background: var(--red-bg); color: var(--red); }
+  .fk { background: var(--blue-bg); color: var(--blue); }
+  .uk { background: var(--green-bg); color: var(--green); }
+
+  /* API table */
+  .api-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .api-table th {
+    text-align: left; font-size: 10px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text3);
+    padding: .4rem .6rem; border-bottom: 1px solid var(--border);
+  }
+  .api-table td { padding: .55rem .6rem; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  .api-table tr:last-child td { border-bottom: none; }
+  .method { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; display: inline-block; }
+  .post { background: var(--green-bg); color: var(--green); }
+  .get  { background: var(--blue-bg); color: var(--blue); }
+  .uri  { font-family: ui-monospace, monospace; font-size: 11px; color: var(--text); }
+
+  /* Stack */
+  .stack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stack-item { background: var(--bg2); border-radius: var(--radius); padding: .7rem .9rem; }
+  .stack-category { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: .3rem; }
+  .stack-vals { font-size: 12px; color: var(--text2); line-height: 1.65; }
+
+  code { font-family: ui-monospace, monospace; font-size: 11px; background: var(--bg2); padding: 1px 5px; border-radius: 4px; color: var(--text); }
+
+  @media (max-width: 560px) {
+    .grid3, .arch, .erd-grid, .highlight-grid { grid-template-columns: 1fr 1fr; }
+    .stack-grid { grid-template-columns: 1fr; }
+    .cache-flow { flex-direction: column; }
+  }
+  @media (max-width: 400px) {
+    .grid3, .erd-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-label">프로젝트 소개</div>
+    <div class="hero-title">PLYY — 큐레이션 음악 플랫폼</div>
+    <div class="hero-sub">알고리즘이 놓친 숨은 명곡을 찾는 즐거움. 큐레이터가 직접 선별한 플레이리스트로 발견부터 감상·공유까지 편하고 즐거운 음악 경험을 제공합니다.</div>
+  </div>
+
+  <!-- 문제 인식 -->
+  <div class="section">
+    <div class="section-title">기획 배경</div>
+    <div class="grid3">
+      <div class="card">
+        <div class="card-label">피로감</div>
+        <div class="card-title">끝없는 스크롤</div>
+        <div class="card-desc">AI 추천이 취향을 온전히 반영 못해 원하는 음악 탐색에 시간 낭비</div>
+      </div>
+      <div class="card">
+        <div class="card-label">한계</div>
+        <div class="card-title">반복 추천</div>
+        <div class="card-desc">청취 이력 기반 유사곡 루프. 인디·마이너 장르 숨겨진 명곡 접근 어려움</div>
+      </div>
+      <div class="card">
+        <div class="card-label">단절</div>
+        <div class="card-title">제한된 공유</div>
+        <div class="card-desc">플랫폼 간 연동 부재. 취향 공유·소통 창구 부족</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 구현 현황 -->
+  <div class="section">
+    <div class="section-title">구현 현황</div>
+    <div class="pill-row">
+      <span class="pill done">✓ 소셜 로그인 (카카오·네이버·구글)</span>
+      <span class="pill done">✓ JWT + Redis 토큰 관리</span>
+      <span class="pill done">✓ Refresh Token Rotation</span>
+      <span class="pill done">✓ Spotify 링크 파싱</span>
+      <span class="pill done">✓ 큐레이션 코멘트 작성</span>
+      <span class="pill done">✓ 장르·무드·태그 분류</span>
+      <span class="pill done">✓ Tiered Token Cache (L1+L2)</span>
+    </div>
+    <div class="pill-row">
+      <span class="pill plan">예정 YouTube 파싱</span>
+      <span class="pill plan">예정 Apple Music</span>
+      <span class="pill plan">예정 좋아요·북마크·댓글</span>
+      <span class="pill plan">예정 팔로우·통계 대시보드</span>
+      <span class="pill plan">예정 개인화 추천 피드</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 아키텍처 -->
+  <div class="section">
+    <div class="section-title">시스템 아키텍처 — 핵심 결정</div>
+
+    <div class="flow-wrap" style="margin-bottom:1rem;">
+      <div class="flow-header">Hexagonal Architecture (Ports &amp; Adapters)</div>
+      <div class="flow-body">
+        <div class="arch" style="margin-bottom:.75rem;">
+          <div class="arch-cell">
+            <div class="arch-cell-label">Domain Layer</div>
+            <div class="arch-cell-val">ExternalPlaylistPort</div>
+            <div class="arch-cell-sub">외부 시스템을 몰라도 동작하는 추상 인터페이스</div>
+          </div>
+          <div class="arch-cell">
+            <div class="arch-cell-label">Adapter (현재)</div>
+            <div class="arch-cell-val">SpotifyPlaylistAdapter</div>
+            <div class="arch-cell-sub">Port 구현체. API 명세 변경 시 여기만 수정</div>
+          </div>
+          <div class="arch-cell">
+            <div class="arch-cell-label">Factory (런타임)</div>
+            <div class="arch-cell-val">ExternalPlaylistPortFactory</div>
+            <div class="arch-cell-sub">링크 소스에 따라 어댑터 동적 주입</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6;">
+          YouTube·Apple Music 추가 시 기존 코드 수정 없이 <code>YouTubePlaylistAdapter</code>만 추가. 도메인 로직(<code>PlaylistService</code>)은 영향 없음.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-wrap">
+      <div class="flow-header">Tiered Token Cache — L1 Memory + L2 Redis + Atomic Lock</div>
+      <div class="flow-body">
+        <div class="cache-flow">
+          <div class="cache-node" style="flex:0 0 auto;min-width:60px;">
+            <div class="cache-node-title" style="font-size:11px;">요청</div>
+          </div>
+          <div class="cache-arrow">→</div>
+          <div class="cache-node l1">
+            <div class="cache-node-title">L1 Memory</div>
+            <div class="cache-node-sub">ConcurrentHashMap<br>네트워크 I/O 없음</div>
+          </div>
+          <div class="cache-arrow">→ miss</div>
+          <div class="cache-node l2">
+            <div class="cache-node-title">L2 Redis</div>
+            <div class="cache-node-sub">분산 공유 캐시<br>TTL 3500s</div>
+          </div>
+          <div class="cache-arrow">→ miss</div>
+          <div class="cache-node api">
+            <div class="cache-node-title">Spotify Auth</div>
+            <div class="cache-node-sub">AtomicBoolean Lock<br>단일 스레드만 호출</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-top:.5rem;">
+          동시 다발적 토큰 갱신 요청이 와도 Lock으로 중복 API 호출 차단. 앱 재시작 시에도 Redis에서 토큰 재사용 가능.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 플레이리스트 등록 플로우 -->
+  <div class="section">
+    <div class="section-title">Playlist Registration Flow</div>
+    <div class="flow-wrap">
+      <div class="flow-header">Spotify 링크 → PLYY 플레이리스트 생성</div>
+      <div class="flow-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-title">요청 수신 &amp; 검증</div>
+              <div class="step-desc">POST /api/v1/playlists — 링크·코멘트·태그·커버 이미지 포함. Curator·MasterGenre DB 조회 및 검증.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-title">토큰 획득 (Tiered Cache)</div>
+              <div class="step-desc">L1 → L2 → Spotify Auth API 순서로 서버 토큰 조회. AtomicBoolean으로 중복 발급 차단.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-title">외부 메타데이터 수집</div>
+              <div class="step-desc">SpotifyPlaylistAdapter → GET /playlists/{id}. 트랙 목록·썸네일·앨범 정보 파싱 후 ExternalPlaylistData DTO 반환.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-title">TrackSynchronizer — 중복 방지</div>
+              <div class="step-desc">spotify_id IN(...) Bulk 조회로 N+1 방지. DB에 없는 트랙만 saveAll()로 Batch Insert.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div>
+              <div class="step-title">PlaylistFactory — 도메인 객체 생성</div>
+              <div class="step-desc">트랙 순서·큐레이션 코멘트·장르·무드·태그 연관관계 캡슐화. @Transactional 범위 내 단일 save.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">6</div>
+            <div>
+              <div class="step-title">201 Created 응답</div>
+              <div class="step-desc">Location: /api/v1/playlists/{id} 반환.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 태그 분류 -->
+  <div class="section">
+    <div class="section-title">Tag Classification Strategy</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:.75rem;">
+      입력된 태그명을 Genre → Mood → Custom 우선순위로 자동 분류합니다.
+    </div>
+    <div class="tag-flow">
+      <span class="tag-input">"힙합"</span>
+      <span class="tag-arrow">→</span>
+      <span class="tag-check">장르/서브장르 DB 포함?</span>
+      <span class="tag-arrow">Yes →</span>
+      <span class="tag-result t-genre">GENRE</span>
+    </div>
+    <div class="tag-flow">
+      <span class="tag-input">"새벽감성"</span>
+      <span class="tag-arrow">→</span>
+      <span class="tag-check">무드 DB 포함?</span>
+      <span class="tag-arrow">Yes →</span>
+      <span class="tag-result t-mood">MOOD</span>
+    </div>
+    <div class="tag-flow">
+      <span class="tag-input">"털ㄴ업"</span>
+      <span class="tag-arrow">→</span>
+      <span class="tag-check">어디에도 미해당</span>
+      <span class="tag-arrow">→</span>
+      <span class="tag-result t-custom">CUSTOM</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ERD -->
+  <div class="section">
+    <div class="section-title">Database Schema 요약</div>
+    <div class="erd-grid">
+      <div class="erd-table">
+        <div class="erd-table-head">user</div>
+        <div class="erd-table-row"><span>id</span><span class="erd-badge pk">PK</span></div>
+        <div class="erd-table-row"><span>email</span><span class="erd-badge uk">UK</span></div>
+        <div class="erd-table-row"><span>social_id</span></div>
+        <div class="erd-table-row"><span>playlist_count</span></div>
+        <div class="erd-table-row"><span>follower_count</span></div>
+      </div>
+      <div class="erd-table">
+        <div class="erd-table-head">playlist</div>
+        <div class="erd-table-row"><span>id</span><span class="erd-badge pk">PK</span></div>
+        <div class="erd-table-row"><span>curator_id</span><span class="erd-badge fk">FK</span></div>
+        <div class="erd-table-row"><span>master_genre_id</span><span class="erd-badge fk">FK</span></div>
+        <div class="erd-table-row"><span>avg_bpm</span></div>
+        <div class="erd-table-row"><span>total_track_count</span></div>
+      </div>
+      <div class="erd-table">
+        <div class="erd-table-head">playlist_track</div>
+        <div class="erd-table-row"><span>playlist_id</span><span class="erd-badge fk">FK</span></div>
+        <div class="erd-table-row"><span>track_id</span><span class="erd-badge fk">FK</span></div>
+        <div class="erd-table-row"><span>track_order</span></div>
+        <div class="erd-table-row" style="color:var(--blue);"><span>track_introduction</span></div>
+      </div>
+      <div class="erd-table">
+        <div class="erd-table-head">track</div>
+        <div class="erd-table-row"><span>id</span><span class="erd-badge pk">PK</span></div>
+        <div class="erd-table-row"><span>spotify_id</span><span class="erd-badge uk">UK</span></div>
+        <div class="erd-table-row"><span>title / artist</span></div>
+        <div class="erd-table-row"><span>duration_ms</span></div>
+        <div class="erd-table-row"><span>bpm</span></div>
+      </div>
+      <div class="erd-table">
+        <div class="erd-table-head">genre / sub_genre</div>
+        <div class="erd-table-row"><span>id</span><span class="erd-badge pk">PK</span></div>
+        <div class="erd-table-row"><span>parent_genre_id</span><span class="erd-badge fk">FK</span></div>
+        <div class="erd-table-row" style="font-style:italic;color:var(--text3);font-size:11px;"><span>Pop → K-Pop 계층 구조</span></div>
+      </div>
+      <div class="erd-table">
+        <div class="erd-table-head">playlist_view_log</div>
+        <div class="erd-table-row"><span>playlist_id</span><span class="erd-badge fk">FK</span></div>
+        <div class="erd-table-row" style="color:var(--blue);"><span>inflow_type</span></div>
+        <div class="erd-table-row"><span>created_at</span></div>
+        <div class="erd-table-row" style="font-style:italic;color:var(--text3);font-size:11px;"><span>유입 경로 통계용</span></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text3);line-height:1.6;">
+      3NF 기본 준수 + 통계 컬럼 반정규화(avg_bpm, playlist_count). 관계 테이블 ON DELETE CASCADE. (user_id, playlist_id) 복합 UK로 좋아요·북마크 중복 방지.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- API -->
+  <div class="section">
+    <div class="section-title">구현된 API 명세</div>
+    <table class="api-table">
+      <thead>
+        <tr><th>Method</th><th>URI</th><th>설명</th><th>비고</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="method post">POST</span></td><td class="uri">/api/v1/auth/reissue</td><td>Access Token 재발급</td><td style="color:var(--text3);font-size:11px;">Cookie: refreshToken</td></tr>
+        <tr><td><span class="method post">POST</span></td><td class="uri">/api/v1/auth/logout</td><td>로그아웃</td><td style="color:var(--text3);font-size:11px;">AT Denylist 등록</td></tr>
+        <tr><td><span class="method post">POST</span></td><td class="uri">/api/v1/playlists</td><td>플레이리스트 생성</td><td style="color:var(--text3);font-size:11px;">multipart/form-data</td></tr>
+        <tr><td><span class="method get">GET</span></td><td class="uri">/api/v1/genres/master</td><td>마스터 장르 목록</td><td style="color:var(--text3);font-size:11px;">—</td></tr>
+        <tr><td><span class="method get">GET</span></td><td class="uri">/api/v1/genres/{id}/sub-genres</td><td>서브 장르 목록</td><td style="color:var(--text3);font-size:11px;">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 기술 스택 -->
+  <div class="section">
+    <div class="section-title">기술 스택</div>
+    <div class="stack-grid">
+      <div class="stack-item">
+        <div class="stack-category">Backend</div>
+        <div class="stack-vals">Java 21 · Spring Boot 3.5<br>Spring Security 6 · JPA / Hibernate 6 · Flyway</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-category">데이터 &amp; 캐시</div>
+        <div class="stack-vals">MySQL 8.0 · Redis (Jedis) · WebClient (WebFlux)</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-category">인프라</div>
+        <div class="stack-vals">Docker / Docker Compose · Spring Actuator · P6Spy</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-category">외부 연동</div>
+        <div class="stack-vals">Spotify Web API · OAuth2 (카카오·구글·네이버) · YouTube·BPM API (예정)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
