@@ -192,14 +192,14 @@
             <div class="step-num auth">4</div>
             <div>
               <div class="step-title">Refresh Token 쿠키 저장</div>
-              <div class="step-desc">RT는 JS로 읽을 수 없는 쿠키에 저장해 탈취 위험을 줄임. 재발급 요청 시 브라우저가 자동으로 전송.</div>
+              <div class="step-desc">RT는 HttpOnly 쿠키에 담아 전달. 이후 재발급 요청 시 브라우저가 자동으로 전송하는 구조</div>
             </div>
           </div>
           <div class="step">
             <div class="step-num auth">5</div>
             <div>
               <div class="step-title">Access Token 재발급</div>
-              <div class="step-desc">AT가 만료되면 RT로 새 AT 발급. 이때 RT도 함께 교체해 탈취된 RT가 재사용되지 않도록 차단.</div>
+              <div class="step-desc">AT가 만료되면 쿠키의 RT를 검증해 새 AT 발급</div>
             </div>
           </div>
         </div>
@@ -212,19 +212,19 @@
         <div class="sec-grid">
           <div class="sec-item">
             <div class="sec-item-title">토큰 교체 (RTR)</div>
-            <div class="sec-item-desc">AT 재발급 시마다 RT도 새로 교체. 누군가 RT를 훔쳐도 이미 무효화된 상태라 피해를 막을 수 있음.</div>
+            <div class="sec-item-desc">AT 재발급 시마다 함께 새로 발급하여 갱신하고, 기존 토큰은 폐기 처리함.</div>
           </div>
           <div class="sec-item">
             <div class="sec-item-title">로그아웃 처리</div>
-            <div class="sec-item-desc">로그아웃 시 기존 AT를 블랙리스트에 등록. 이후 해당 토큰으로 요청이 들어오면 즉시 차단.</div>
+            <div class="sec-item-desc">로그아웃된 AT은 파싱을 통해 남은 유효시간을 계산하고, 해당 시간(TTL)만큼만 Redis Denylist에 등록하여 재사용 차단.</div>
           </div>
           <div class="sec-item">
             <div class="sec-item-title">이상 징후 감지</div>
-            <div class="sec-item-desc">서버가 저장한 RT와 요청된 RT가 다르면 탈취로 판단, 즉시 모든 토큰 삭제 후 재로그인 유도.</div>
+            <div class="sec-item-desc">Redis에 보관된 RT와 요청된 RT가 다르면 탈취로 판단, 즉시 모든 토큰 삭제 후 재로그인 유도.</div>
           </div>
           <div class="sec-item">
             <div class="sec-item-title">쿠키 보안</div>
-            <div class="sec-item-desc">RT 쿠키는 JS 접근 차단 + HTTPS 전용 + 동일 사이트 요청만 허용으로 설정.</div>
+            <div class="sec-item-desc">RT 발급 시 쿠키에 HttpOnly 속성을 부여해 JS 접근(XSS)을 차단하고, 운영 환경에서는 Secure 속성을 동적으로 적용</div>
           </div>
         </div>
       </div>
