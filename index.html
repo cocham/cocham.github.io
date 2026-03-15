@@ -82,6 +82,16 @@
   .t-mood  { background: var(--yellow-bg); color: var(--yellow); }
   .t-custom { background: var(--bg2); color: var(--text2); border: 1px solid var(--border2); }
 
+  .strategy-wrap { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-top: 1.2rem; }
+  .strategy-header { background: var(--bg2); padding: .6rem 1rem; font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--text2); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .5rem; }
+  .strategy-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+  .strategy-cell { background: var(--bg); padding: .9rem 1rem; }
+  .strategy-cell-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: .3rem; }
+  .strategy-cell-name { font-size: 13px; font-weight: 600; margin-bottom: .25rem; font-family: ui-monospace, monospace; }
+  .strategy-cell-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
+  .strategy-note { padding: .65rem 1rem; font-size: 11px; color: var(--text3); line-height: 1.6; border-top: 1px solid var(--border); background: var(--bg); }
+
   .stack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .stack-item { background: var(--bg2); border-radius: var(--radius); padding: .7rem .9rem; }
   .stack-category { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: .3rem; }
@@ -327,6 +337,31 @@
       <span class="tag-check">어디에도 없음</span>
       <span class="tag-arrow">→</span>
       <span class="tag-result t-custom">커스텀</span>
+    </div>
+
+    <div class="strategy-wrap">
+      <div class="strategy-header">
+        구현 구조
+        <span class="strategy-badge">전략 패턴 (Strategy Pattern)</span>
+      </div>
+      <div class="strategy-grid">
+        <div class="strategy-cell">
+          <div class="strategy-cell-label">인터페이스</div>
+          <div class="strategy-cell-name">TagTypeStrategy</div>
+          <div class="strategy-cell-desc">matches() · getType() 두 메서드로 분류 책임을 추상화</div>
+        </div>
+        <div class="strategy-cell">
+          <div class="strategy-cell-label">구현체 (우선순위 순)</div>
+          <div class="strategy-cell-name">Genre / Mood / Custom</div>
+          <div class="strategy-cell-desc">각 전략이 독립적으로 판단. 순서대로 순회하며 첫 번째 매칭 전략 선택</div>
+        </div>
+        <div class="strategy-cell">
+          <div class="strategy-cell-label">분류기</div>
+          <div class="strategy-cell-name">TagClassifier</div>
+          <div class="strategy-cell-desc">전략 목록을 주입받아 실행. 새 분류 기준 추가 시 전략 클래스만 추가하면 됨</div>
+        </div>
+      </div>
+      <div class="strategy-note">기존 코드를 수정하지 않고 새 전략 클래스만 추가해 분류 기준을 확장할 수 있는 구조 (OCP 준수)</div>
     </div>
   </div>
 
