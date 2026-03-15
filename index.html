@@ -60,18 +60,6 @@
   .arch-cell-val { font-size: 13px; font-weight: 600; margin-bottom: .2rem; }
   .arch-cell-sub { font-size: 11px; color: var(--text2); line-height: 1.5; }
 
-  .cache-flow { display: flex; align-items: stretch; gap: 6px; flex-wrap: wrap; margin: .75rem 0; }
-  .cache-node { flex: 1; min-width: 90px; border: 1px solid var(--border2); border-radius: var(--radius); padding: .6rem .75rem; background: var(--bg); text-align: center; }
-  .cache-node-title { font-size: 12px; font-weight: 600; }
-  .cache-node-sub { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
-  .cache-arrow { display: flex; align-items: center; color: var(--text3); font-size: 12px; flex-shrink: 0; }
-  .cache-node.l1 { background: var(--yellow-bg); border-color: var(--yellow-border); }
-  .cache-node.l1 .cache-node-title { color: var(--yellow); }
-  .cache-node.l2 { background: var(--blue-bg); border-color: var(--blue-border); }
-  .cache-node.l2 .cache-node-title { color: var(--blue); }
-  .cache-node.api { background: var(--green-bg); border-color: var(--green-border); }
-  .cache-node.api .cache-node-title { color: var(--green); }
-
   .steps { display: flex; flex-direction: column; }
   .step { display: flex; gap: .75rem; padding: .75rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
   .step:last-child { border-bottom: none; }
@@ -104,7 +92,6 @@
 
   @media (max-width: 560px) {
     .grid3, .arch, .sec-grid, .stack-grid { grid-template-columns: 1fr 1fr; }
-    .cache-flow { flex-direction: column; }
   }
   @media (max-width: 400px) { .grid3 { grid-template-columns: 1fr; } }
 </style>
@@ -150,7 +137,6 @@
       <span class="pill done">✓ Spotify 링크 파싱</span>
       <span class="pill done">✓ 큐레이션 코멘트 작성</span>
       <span class="pill done">✓ 장르·무드·태그 분류</span>
-      <span class="pill done">✓ Tiered Token Cache (L1+L2)</span>
     </div>
     <div class="pill-row">
       <span class="pill plan">예정 YouTube 파싱</span>
@@ -237,12 +223,12 @@
 
   <hr class="divider">
 
-  <!-- 아키텍처 핵심 결정 -->
+  <!-- 외부 플랫폼 확장 구조 -->
   <div class="section">
-    <div class="section-title">아키텍처 핵심 결정</div>
+    <div class="section-title">외부 플랫폼 확장 구조</div>
 
-    <div class="flow-wrap" style="margin-bottom:1rem;">
-      <div class="flow-header">외부 플랫폼 확장 구조 (Hexagonal Architecture)</div>
+    <div class="flow-wrap">
+      <div class="flow-header">Hexagonal Architecture 적용</div>
       <div class="flow-body">
         <div class="arch">
           <div class="arch-cell">
@@ -262,33 +248,6 @@
           </div>
         </div>
         <p class="note">YouTube·Apple Music 추가 시 기존 코드 수정 없이 어댑터 클래스만 추가하면 됨.</p>
-      </div>
-    </div>
-
-    <div class="flow-wrap">
-      <div class="flow-header">Spotify 토큰 캐싱 전략</div>
-      <div class="flow-body">
-        <div class="cache-flow">
-          <div class="cache-node" style="flex:0 0 auto;min-width:56px;">
-            <div class="cache-node-title" style="font-size:11px;">요청</div>
-          </div>
-          <div class="cache-arrow">→</div>
-          <div class="cache-node l1">
-            <div class="cache-node-title">메모리 캐시</div>
-            <div class="cache-node-sub">서버 내부 저장<br>가장 빠름</div>
-          </div>
-          <div class="cache-arrow">→ 없으면</div>
-          <div class="cache-node l2">
-            <div class="cache-node-title">Redis 캐시</div>
-            <div class="cache-node-sub">서버 재시작 후에도 유지</div>
-          </div>
-          <div class="cache-arrow">→ 없으면</div>
-          <div class="cache-node api">
-            <div class="cache-node-title">Spotify 직접 요청</div>
-            <div class="cache-node-sub">동시 요청 와도 1번만 호출</div>
-          </div>
-        </div>
-        <p class="note" style="margin-top:.5rem;">토큰을 매번 발급받지 않고 캐시에서 재사용. 동시에 여러 요청이 몰려도 Spotify API는 한 번만 호출되도록 제어.</p>
       </div>
     </div>
   </div>
@@ -313,7 +272,7 @@
             <div class="step-num">2</div>
             <div>
               <div class="step-title">Spotify에서 트랙 정보 수집</div>
-              <div class="step-desc">캐시에서 서버 토큰 조회 후 Spotify API 호출 → 트랙 목록·썸네일·앨범 정보 파싱</div>
+              <div class="step-desc">서버 토큰으로 Spotify API 호출 → 트랙 목록·썸네일·앨범 정보 파싱</div>
             </div>
           </div>
           <div class="step">
